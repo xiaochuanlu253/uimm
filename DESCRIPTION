@@ -1,0 +1,47 @@
+Package: uimm
+Type: Package
+Title: An universe of individual level mortality models
+Version: 0.1.0
+Authors@R: 
+    c(person(given = "Xiaochuan", family = "Lu", email = "xiaochuan.lu@unsw.edu.au",
+             role = c("aut", "cre")))
+Description: S4 classes and methods for parametric age-cohort (PAC) survival models 
+    (Gompertz, Makeham, Perks, Beard, Kannisto, Thatcher), with fitting, evaluation 
+    (AIC, IBS), a formula interface, survival trees with left-truncation, 
+    model-based recursive partitioning, and a Gompertz proportional hazards wrapper.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Depends:
+    R (>= 4.1)
+Imports:
+    methods,
+    survival,
+    flexsurv,
+    partykit,
+    LTRCtrees
+Suggests:
+    GenSA,
+    knitr,
+    rmarkdown,
+    stats
+Collate: 
+    '00-generics.R'
+    '01-classes.R'
+    '02-model-fns.R'
+    '03-constructors.R'
+    '04-methods-loglik.R'
+    '06-fit.R'
+    '07-pacfit.R'
+    '10-utils-ibs.R'
+    '11-utils-flexsurvreg.R'
+    '20-models-baseline.R'
+    '21-models-st.R'
+    '22-models-stp.R'
+    '23-models-mtp.R'
+    '24-models-gph.R'
+    '30-mortfit.R'
+    'zzz.R'
+VignetteBuilder: knitr

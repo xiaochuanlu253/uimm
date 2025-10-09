@@ -1,0 +1,51 @@
+---
+title: "uimm: Getting Started"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{getting-started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 6, fig.height = 4,
+  eval = (Sys.getenv("NOT_CRAN") == "true")  # skip heavy chunks on CRAN
+)
+
+```
+
+```{r setup}
+library(uimm)
+set.seed(1)
+n <- 200
+df <- data.frame(
+  birthage = runif(n, 80, 90),
+  censoredage = runif(n, 90, 105),
+  DthIndicator = rbinom(n, 1, 0.4)
+)
+```
+
+
+```{r}
+fit <- pac_fit(Surv(birthage, censoredage, DthIndicator) ~ 1, data = df,
+               AC = "Gompertz", patience = 50)
+fit
+AIC(fit)
+```
+
+
+Tips:
+- Prefer `uimm::function()` calls if you *don’t* load the package with `library(uimm)`.
+- For long sections, set per-chunk `eval = FALSE` or `cache = TRUE`.
+
+# 4) Build the vignettes
+
+During development:
+
+```r
+devtools::build_vignettes()   # renders to inst/doc
+browseVignettes("uimm")
+
