@@ -86,32 +86,25 @@ eval$IBS
 
 ---
 
-## 🌳 Advanced Models
-
-### Survival Tree Partitioning (STP)
+## 🌳 Combined Models
 
 ```r
+# Survival Tree Partitioning (STP)
 fit_stp <- mort_fit("stp",
   formula = Surv(birthage, censoredage, DthIndicator) ~ Gender + Education,
   data = df, AC = "Beard"
 )
 fit_stp
-```
 
-### Model-based Recursive Partitioning (MTP)
-
-```r
+# Model-based Recursive Partitioning (MTP)
 fit_mtp <- mort_fit("mtp",
   formula = Surv(birthage, censoredage, DthIndicator) ~ 1 |
     Gender + Education + HealthStatus,
   data = df
 )
 fit_mtp
-```
 
-### Gompertz Proportional Hazards (GPH)
-
-```r
+# Gompertz Proportional Hazards (GPH)
 fit_gph <- mort_fit("gph",
   formula = Surv(birthage, censoredage, DthIndicator) ~ Gender + Education,
   data = df
