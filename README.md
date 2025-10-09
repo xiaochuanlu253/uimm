@@ -36,11 +36,7 @@ You can install directly from GitHub (recommended during development):
 ```r
 # install.packages("devtools")
 devtools::install_github("xiaochuanlu253/uimm")
-````
-
-Then load:
-
-```r
+# load package
 library(uimm)
 ```
 
