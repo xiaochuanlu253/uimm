@@ -1,4 +1,175 @@
-url: ~
+# _pkgdown.yml for the uimm package
+# Build a nice documentation site with pkgdown and host it via GitHub Pages.
+
+# -----------------------------------------------------------------------------
+# Site metadata
+# -----------------------------------------------------------------------------
 template:
   bootstrap: 5
+  bslib:
+    primary: "#0E7C86"   # accent color
+    base_font: {google: "Inter"}
+    heading_font: {google: "Inter"}
+    code_font: {google: "Source Code Pro"}
+  mathjax: true
 
+url: https://YourGitHubUser.github.io/uimm
+title: "uimm: A Universe of Individual-level Mortality Models"
+description: >
+  Parametric age-only survival modeling in R: Gompertz/Makeham/Perks/Beard/
+  Kannisto/Thatcher families, tree-based partitioning, and proportional hazards,
+  all behind a unified formula interface.
+
+# If you use GitHub Actions to deploy, pkgdown will write to docs/ by default.
+# Ensure Settings/Pages serves from the /docs folder on the main branch.
+destination: docs
+
+# -----------------------------------------------------------------------------
+# Navbar
+# -----------------------------------------------------------------------------
+navbar:
+  structure:
+    left:  [reference, articles, news]
+    right: [search, github]
+  components:
+    reference:
+      text: Reference
+      href: reference/index.html
+    articles:
+      text: Articles
+      menu:
+        - text: Getting started
+          href: articles/getting-started.html
+        - text: Model zoo
+          href: articles/model-zoo.html
+        - text: Trees & MOB
+          href: articles/trees-and-mob.html
+    news:
+      text: Changelog
+      href: news/index.html
+    github:
+      icon: fab fa-github
+      href: https://github.com/xiaochuanlu253/uimm
+
+# -----------------------------------------------------------------------------
+# Home page
+# -----------------------------------------------------------------------------
+home:
+  title: "uimm"
+  description: >
+    A consistent, extensible framework for individual-level mortality modeling.
+  links:
+    - text: Get started
+      href: articles/getting-started.html
+    - text: Browse functions
+      href: reference/index.html
+    - text: Source on GitHub
+      href: https://github.com/xiaochuanlu253/uimm
+
+# -----------------------------------------------------------------------------
+# Reference index (group functions into sections)
+# Only list exported topics you want prominently grouped on the site.
+# -----------------------------------------------------------------------------
+reference:
+  - title: "Front door"
+    desc: "High-level unified interface."
+    contents:
+      - mort_fit
+
+  - title: "Formula-first PAC fitting"
+    desc: "Fit parametric age-only models from a survival formula."
+    contents:
+      - pac_fit
+      - baseline_fit
+
+  - title: "Tree-based models"
+    desc: "Survival tree (LTRCART) and partitioned PAC models."
+    contents:
+      - st_fit
+      - stp_fit
+      - mtp_fit
+
+  - title: "Proportional hazards"
+    desc: "Gompertz proportional hazards via flexsurv."
+    contents:
+      - gph_fit
+
+  - title: "PAC families (constructors)"
+    desc: "Create specific age-only mortality laws."
+    contents:
+      - GompertzPAC
+      - MakehamPAC
+      - PerksPAC
+      - BeardPAC
+      - KannistoPAC
+      - ThatcherPAC
+      - InitPAC
+
+  - title: "Evaluation & prediction"
+    desc: "Metrics and helpers used to assess fitted models."
+    contents:
+      - evaluate
+      - BS
+      - AIC
+      - predict
+
+  - title: "Core generics"
+    desc: "S4 generics for PAC models."
+    contents:
+      - mu
+      - survival
+      - cumhaz
+      - logllh
+      - get_logllh
+      - fit
+
+  - title: "S4 classes"
+    desc: "Main classes used across uimm."
+    contents:
+      - PAC
+      - PACFit
+      - MortalityModel
+      - BaselineModel
+      - STModel
+      - STPModel
+      - MTPModel
+      - GPHModel
+
+  - title: "Utilities"
+    desc: "Support functions and internal helpers."
+    contents:
+      - empirical_survival
+      - AC_from
+
+# -----------------------------------------------------------------------------
+# Articles (vignettes)
+# Ensure you create these Rmds under vignettes/ with matching names.
+# -----------------------------------------------------------------------------
+articles:
+  - title: "Getting Started"
+    contents:
+      - getting-started
+  - title: "Model Zoo"
+    contents:
+      - model-zoo
+  - title: "Trees & MOB"
+    contents:
+      - trees-and-mob
+
+# -----------------------------------------------------------------------------
+# Development / footer options
+# -----------------------------------------------------------------------------
+development:
+  mode: auto   # show dev version badge on non-CRAN builds
+
+# Add extra search options if desired
+search:
+  exclude: ["news/index.html"]
+
+# Build a sitemap.xml
+sitemap: true
+
+# Optional: customize reference index order for S4 methods resolution pages
+# topics:
+#   - pac_fit
+#   - mort_fit
