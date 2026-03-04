@@ -44,11 +44,21 @@ pac_fit <- function(formula, data,
   sType <- attr(y, "type")
   if (!(sType %in% c("counting"))) stop("Use counting Surv: Surv(birthage, censoredage, DthIndicator) ~ 1")
 
-  df_train <- data.frame(
-    birthage = as.numeric(y[,1]),
-    censoredage = as.numeric(y[,2]),
-    DthIndicator = as.integer(y[,3])
-  )
+  if (ncol(y) == 3){
+    df_train <- data.frame(
+      birthage = as.numeric(y[,1]),
+      censoredage = as.numeric(y[,2]),
+      DthIndicator = as.integer(y[,3])
+    )
+  } else if (ncol(y) == 2){
+    df_train <- data.frame(
+      birthage = rep(0, nrow(y)),
+      censoredage = as.numeric(y[,1]),
+      DthIndicator = as.integer(y[,2])
+    )
+  } else {
+    stop("Unexpected Surv response format with ", ncol(y), " columns.")
+  }
 
   ctor <- .pac_registry[[AC]]
   if (is.null(ctor)) stop("Unknown AC family: ", AC)

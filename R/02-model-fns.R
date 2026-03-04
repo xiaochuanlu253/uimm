@@ -225,3 +225,281 @@ setMethod("mu", "PAC", function(model, x) model@mu_(model@params, x))
 setMethod("survival", "PAC", function(model, x) model@survival_(model@params, x))
 #' @export
 setMethod("cumhaz", "PAC", function(model, x, t) model@cumhaz_(model@params, x, t))
+
+
+# stats form distribution functions
+
+#' The Gompertz distribution
+#'
+#' Density, distribution function, quantile function and random generation for the Gompertz distribution.
+#' @details The Gompertz distribution is defined by the hazard function \eqn{\mu(x) = \exp(a + b x)}.
+#' The survival function is \eqn{S(x) = \exp\{-\exp(a) (e^{b x} - 1)/b\}}.
+#' @param x,q numeric vector of quantiles.
+#' @param p numeric vector of probabilities.
+#' @param n number of observations.
+#' @param par numeric length-2 vector of parameters \code{c(a, b)}.
+#' @param lower.tail logical; if \code{FALSE}, probabilities are \eqn{P(X > x)}.
+#' @return
+#' * `dgompertz()`: density.
+#' * `pgompertz()`: distribution function.
+#' * `qgompertz()`: quantiles.
+#' * `rgompertz()`: random values.
+#'
+#' @seealso [`survival_gompertz()`] given the same parameterization.
+#' @seealso [flexsurv::rgompertz()] for an implementation in \pkg{flexsurv}.
+#'
+#' @examples
+#' dgompertz(80:100, c(-10, 0.09))
+#' pgompertz(80:100, c(-10, 0.09))
+#' qgompertz(seq(0, 1, by = 0.1), c(-10, 0.09))
+#' rgompertz(10, c(-10, 0.09))
+#'
+#' @name Gompertz
+#' @aliases dgompertz pgompertz qgompertz rgompertz
+#'
+#' @rdname Gompertz
+#' @export
+dgompertz <- function(x, par) {
+  forceofmortality_gompertz(par, x) * survival_gompertz(par, x)
+}
+#' @rdname Gompertz
+#' @export
+pgompertz <- function(x, par) {
+  1 - survival_gompertz(par, x)
+}
+#' @rdname Gompertz
+#' @export
+qgompertz <- function(p, par, lower.tail = TRUE) {
+  if (!lower.tail) p <- 1 - p
+  uniroot(function(x) survival_gompertz(par, x) - (1 - p), lower = 0, upper = 150)$root
+}
+#' @rdname Gompertz
+#' @export
+rgompertz <- function(n, par) {
+  u <- runif(n)
+  qgompertz(u, par)
+}
+
+#' The Makeham distribution
+#'
+#' Density, distribution function, quantile function and random generation for the Makeham distribution.
+#' @details The Makeham distribution is defined by the hazard function \eqn{\mu(x) = \exp(a + b x) + \lambda}.
+#' The survival function is \eqn{S(x) = \exp\{-\exp(a) (e^{b x} - 1)/b - x \lambda\}}.
+#' @param x,q numeric vector of quantiles.
+#' @param p numeric vector of probabilities.
+#' @param n number of observations.
+#' @param par numeric length-3 vector of parameters \code{c(a, b, lambda)}.
+#' @param lower.tail logical; if \code{FALSE}, probabilities are \eqn{P(X > x)}.
+#' @return
+#' * `dmakeham()`: density.
+#' * `pmakeham()`: distribution function.
+#' * `qmakeham()`: quantiles.
+#' * `rmakeham()`: random values.
+#' @examples
+#' dmakeham(80:100, c(-10, 0.09, 0.0005))
+#' pmakeham(80:100, c(-10, 0.09, 0.0005))
+#' qmakeham(seq(0, 1, by = 0.1), c(-10, 0.09, 0.0005))
+#' rmakeham(10, c(-10, 0.09, 0.0005))
+#' @name Makeham
+#' @aliases dmakeham pmakeham qmakeham rmakeham
+#' @rdname Makeham
+#' @export
+dmakeham <- function(x, par) {
+  forceofmortality_makeham(par, x) * survival_makeham(par, x)
+}
+#' @rdname Makeham
+#' @export
+pmakeham <- function(x, par) {
+  1 - survival_makeham(par, x)
+}
+#' @rdname Makeham
+#' @export
+qmakeham <- function(p, par, lower.tail = TRUE) {
+  if (!lower.tail) p <- 1 - p
+  uniroot(function(x) survival_makeham(par, x) - (1 - p), lower = 0, upper = 150)$root
+}
+#' @rdname Makeham
+#' @export
+rmakeham <- function(n, par) {
+  u <- runif(n)
+  qmakeham(u, par)
+}
+
+#' The Perks distribution
+#'
+#' Density, distribution function, quantile function and random generation for the Perks distribution.
+#' @details The Perks distribution is defined by the hazard function \eqn{\mu(x) = \frac{\exp(a + b x)}{1 + \exp(a + \gamma + b x)} + \lambda}.
+#' The survival function is \eqn{S(x) = ((1 + \exp(a + \gamma)) / (1 + \exp(a + \gamma + b x)))^{\exp(-\gamma) / b} / \exp(\lambda x)}.
+#' @param x,q numeric vector of quantiles.
+#' @param p numeric vector of probabilities.
+#' @param n number of observations.
+#' @param par numeric length-4 vector of parameters \code{c(a, b, gam, lambda)}.
+#' @param lower.tail logical; if \code{FALSE}, probabilities are \eqn{P(X > x)}.
+#' @return
+#' * `dperks()`: density.
+#' * `pperks()`: distribution function.
+#' * `qperks()`: quantiles.
+#' * `rperks()`: random values.
+#' @examples
+#' dperks(80:100, c(-10, 0.09, -3, 0))
+#' pperks(80:100, c(-10, 0.09, -3, 0))
+#' qperks(seq(0, 1, by = 0.1), c(-10, 0.09, -3, 0))
+#' rperks(10, c(-10, 0.09, -3, 0))
+#' @name Perks
+#' @aliases dperks pperks qperks rperks
+#' @rdname Perks
+#' @export
+dperks <- function(x, par) {
+  forceofmortality_perks(par, x) * survival_perks(par, x)
+}
+#' @rdname Perks
+#' @export
+pperks <- function(x, par) {
+  1 - survival_perks(par, x)
+}
+#' @rdname Perks
+#' @export
+qperks <- function(p, par, lower.tail = TRUE) {
+  if (!lower.tail) p <- 1 - p
+  uniroot(function(x) survival_perks(par, x) - (1 - p), lower = 0, upper = 150)$root
+}
+#' @rdname Perks
+#' @export
+rperks <- function(n, par) {
+  u <- runif(n)
+  qperks(u, par)
+}
+
+#' The Beard distribution
+#' Density, distribution function, quantile function and random generation for the Beard distribution.
+#' @details The Beard distribution is defined by the hazard function \eqn{\mu(x) = \frac{\exp(a + b x)}{1 + \exp(a + \gamma + b x)}}.
+#' The survival function is \eqn{S(x) = ((1 + \exp(a + \gamma)) / (1 + \exp(a + \gamma + b x)))^{\exp(-\gamma) / b}}.
+#' @param x,q numeric vector of quantiles.
+#' @param p numeric vector of probabilities.
+#' @param n number of observations.
+#' @param par numeric length-3 vector of parameters \code{c(a, b, gam)}.
+#' @param lower.tail logical; if \code{FALSE}, probabilities are \eqn{P(X > x)}.
+#' @return
+#' * `dbeard()`: density.
+#' * `pbeard()`: distribution function.
+#' * `qbeard()`: quantiles.
+#' * `rbeard()`: random values.
+#' @examples
+#' dbeard(80:100, c(-10, 0.09, -3))
+#' pbeard(80:100, c(-10, 0.09, -3))
+#' qbeard(seq(0, 1, by = 0.1), c(-10, 0.09, -3))
+#' rbeard(10, c(-10, 0.09, -3))
+#' @name Beard
+#' @aliases dbeard pbeard qbeard rbeard
+#' @rdname Beard
+#' @export
+dbeard <- function(x, par) {
+  forceofmortality_beard(par, x) * survival_beard(par, x)
+}
+#' @rdname Beard
+#' @export
+pbeard <- function(x, par) {
+  1 - survival_beard(par, x)
+}
+#' @rdname Beard
+#' @export
+qbeard <- function(p, par, lower.tail = TRUE) {
+  if (!lower.tail) p <- 1 - p
+  uniroot(function(x) survival_beard(par, x) - (1 - p), lower = 0, upper = 150)$root
+}
+#' @rdname Beard
+#' @export
+rbeard <- function(n, par) {
+  u <- runif(n)
+  qbeard(u, par)
+}
+
+#' The Kannisto distribution
+#'
+#' Density, distribution function, quantile function and random generation for the Kannisto distribution.
+#' @details The Kannisto distribution is defined by the hazard function \eqn{\mu(x) = \frac{\exp(a + b x)}{1 + \exp(a + b x)}}.
+#' The survival function is \eqn{S(x) = ((1 + \exp(a)) / (1 + \exp(a + b x)))^{1 / b}}.
+#' @param x,q numeric vector of quantiles.
+#' @param p numeric vector of probabilities.
+#' @param n number of observations.
+#' @param par numeric length-2 vector of parameters \code{c(a, b)}.
+#' @param lower.tail logical; if \code{FALSE}, probabilities are \eqn{P(X > x)}.
+#' @return
+#' * `dkannisto()`: density.
+#' * `pkannisto()`: distribution function.
+#' * `qkannisto()`: quantiles.
+#' * `rkannisto()`: random values.
+#' @examples
+#' dkannisto(80:100, c(-10, 0.09))
+#' pkannisto(80:100, c(-10, 0.09))
+#' qkannisto(seq(0, 1, by = 0.1), c(-10, 0.09))
+#' rkannisto(10, c(-10, 0.09))
+#' @name Kannisto
+#' @aliases dkannisto pkannisto qkannisto rkannisto
+#' @rdname Kannisto
+#' @export
+dkannisto <- function(x, par) {
+  forceofmortality_kannisto(par, x) * survival_kannisto(par, x)
+}
+#' @rdname Kannisto
+#' @export
+pkannisto <- function(x, par) {
+  1 - survival_kannisto(par, x)
+}
+#' @rdname Kannisto
+#' @export
+qkannisto <- function(p, par, lower.tail = TRUE) {
+  if (!lower.tail) p <- 1 - p
+  uniroot(function(x) survival_kannisto(par, x) - (1 - p), lower = 0, upper = 150)$root
+}
+#' @rdname Kannisto
+#' @export
+rkannisto <- function(n, par) {
+  u <- runif(n)
+  qkannisto(u, par)
+}
+
+#' The Thatcher distribution
+#'
+#' Density, distribution function, quantile function and random generation for the Thatcher distribution.
+#' @details The Thatcher distribution is defined by the hazard function \eqn{\mu(x) = \frac{\exp(a + b x)}{1 + \exp(a + b x)} + \lambda}.
+#' The survival function is \eqn{S(x) = ((1 + \exp(a)) / (1 + \exp(a + b x)))^{1 / b} / \exp(\lambda x)}.
+#' @param x,q numeric vector of quantiles.
+#' @param p numeric vector of probabilities.
+#' @param n number of observations.
+#' @param par numeric length-3 vector of parameters \code{c(a, b, lambda)}.
+#' @param lower.tail logical; if \code{FALSE}, probabilities are \eqn{P(X > x)}.
+#' @return
+#' * `dthatcher()`: density.
+#' * `pthatcher()`: distribution function.
+#' * `qthatcher()`: quantiles.
+#' * `rthatcher()`: random values.
+#' @examples
+#' dthatcher(80:100, c(-10, 0.09, 0.0005))
+#' pthatcher(80:100, c(-10, 0.09, 0.0005))
+#' qthatcher(seq(0, 1, by = 0.1), c(-10, 0.09, 0.0005))
+#' rthatcher(10, c(-10, 0.09, 0.0005))
+#' @name Thatcher
+#' @aliases dthatcher pthatcher qthatcher rthatcher
+#' @rdname Thatcher
+#' @export
+dthatcher <- function(x, par) {
+  forceofmortality_thatcher(par, x) * survival_thatcher(par, x)
+}
+#' @rdname Thatcher
+#' @export
+pthatcher <- function(x, par) {
+  1 - survival_thatcher(par, x)
+}
+#' @rdname Thatcher
+#' @export
+qthatcher <- function(p, par, lower.tail = TRUE) {
+  if (!lower.tail) p <- 1 - p
+  uniroot(function(x) survival_thatcher(par, x) - (1 - p), lower = 0, upper = 150)$root
+}
+#' @rdname Thatcher
+#' @export
+rthatcher <- function(n, par) {
+  u <- runif(n)
+  qthatcher(u, par)
+}
