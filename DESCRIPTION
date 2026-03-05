@@ -1,7 +1,7 @@
 Package: uimm
 Type: Package
 Title: An universe of individual level mortality models
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: 
     c(person(given = "Xiaochuan", family = "Lu", email = "xiaochuan.lu@unsw.edu.au",
              role = c("aut", "cre")))

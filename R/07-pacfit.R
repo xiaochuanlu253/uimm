@@ -42,7 +42,7 @@ pac_fit <- function(formula, data,
   mf <- stats::model.frame(formula, data = data, na.action = stats::na.omit)
   y  <- stats::model.response(mf)
   sType <- attr(y, "type")
-  if (!(sType %in% c("counting"))) stop("Use counting Surv: Surv(birthage, censoredage, DthIndicator) ~ 1")
+  if (!(sType %in% c("right", "counting"))) stop("Use counting Surv: Surv(birthage, censoredage, DthIndicator) ~ 1")
 
   if (ncol(y) == 3){
     df_train <- data.frame(
